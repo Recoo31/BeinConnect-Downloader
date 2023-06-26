@@ -1,9 +1,11 @@
-import requests as req
 import headers as head
 from getKey import *
 import os
 
-
+try:
+    import requests as req
+except:
+    os.system("pip install requests")
 
 search = input("Search-> ")
 
@@ -25,6 +27,12 @@ headers = {
 try:
     search_post = req.post('https://mobileservice-smarttv-lg.beinconnect.com.tr/api/content/search2', headers=headers, json={'Keyword': search,'Page': 1,'Count': 50}).json()
     data = search_post['products']
+    if not data:
+        print("Movie Not Found!")
+        search = input("Search-> ")
+        
+        search_post = req.post('https://mobileservice-smarttv-lg.beinconnect.com.tr/api/content/search2', headers=headers, json={'Keyword': search,'Page': 1,'Count': 50}).json()
+        data = search_post['products']
 except:
     pass
 
