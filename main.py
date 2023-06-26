@@ -1,11 +1,13 @@
 import headers as head
 from getKey import *
-import os
+import os, time
 
 try:
     import requests as req
+    import ffmpeg
 except:
     os.system("pip install requests")
+    os.system("pip install ffmpeg-python")
 
 search = input("Search-> ")
 
@@ -44,10 +46,19 @@ else:
     pass
 
 for i,movie in enumerate(data):
-    print(f"{i+1}: {movie['titleOriginal']}")
+    if "PS" in movie['id']:
+        typ = "Series"
+    else:
+        typ = "Movie"
+    print(f"{i+1}: {movie['titleOriginal']} | {typ}")
 
 selected = int(input("Select-> ")) - 1
 selected_id = data[selected]['id']
+if "PS" in selected_id:
+        print("Series are not supported")
+        time.sleep(2)
+        exit()
+    
 selected_name = data[selected]['titleOriginal']
 
 
@@ -86,9 +97,26 @@ try:
     key = {}
     for key in keys:
         print("KID:KEY: " + key)
-    key = key.split(':')
 
-    os.system(f'bin\\N_m3u8DL-RE.exe --key {key[1]} --save-name "{selected_name}" "{cdn_list}" --live-real-time-merge --live-pipe-mux --auto-select')
+    os.system(f'bin\\N_m3u8DL-RE.exe --key {key} --save-name "{selected_name}" "{cdn_list}" --live-real-time-merge --live-pipe-mux --auto-select')
+    
+    lang = int(input("Turkish Lang -> 1\nEnglish Lang -> 2\n-> "))
+
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+    
+    if lang == 1:
+        input_video = ffmpeg.input(f'{selected_name}.mp4')
+        input_audio = ffmpeg.input(f'{selected_name}.tr.m4a')
+        output_video = f'{desktop_path}/{selected_name}_out.mp4'
+
+        ffmpeg.output(input_video, input_audio, output_video, c='copy').run()
+    else:
+        input_video = ffmpeg.input(f'{selected_name}.mp4')
+        input_audio = ffmpeg.input(f'{selected_name}.en.m4a')
+        output_video = f'{desktop_path}/{selected_name}_out.mp4'
+
+        ffmpeg.output(input_video, input_audio, output_video, c='copy').run()
+    print("Download Completed\n"*5)
 except Exception as e:
-    print("KEY error. "+ str(e))
+    print("KEY or ffmpeg error. "+ str(e))
     exit()
