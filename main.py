@@ -37,14 +37,7 @@ try:
         data = search_post['products']
 except:
     pass
-
-if search_post['isLogin'] == False:
-    headers['cookie'] = req.get("https://reco31.vercel.app/loginbeinfilm").text
-    search_post = req.post('https://mobileservice-smarttv-lg.beinconnect.com.tr/api/content/search2', headers=headers, json={'Keyword': search,'Page': 1,'Count': 50}).json()
-    data = search_post['products']
-else:
-    pass
-
+    
 for i,movie in enumerate(data):
     if "PS" in movie['id']:
         typ = "Series"
@@ -64,8 +57,11 @@ selected_name = data[selected]['titleOriginal']
 
 checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
 
-
-
+if checkentitlement['errCode']== "NEEDAUTH":
+    headers['cookie'] = req.get("https://reco31.vercel.app/loginbeinfilm").text
+    checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
+else:
+    pass
 
 pt = checkentitlement['Data']['Versions'][0]['Assets'][0]['AssetId']
 usage_spec = checkentitlement['Data']['Versions'][0]['Assets'][0]['UsageSpecId']
@@ -98,7 +94,7 @@ try:
     for key in keys:
         print("KID:KEY: " + key)
 
-    os.system(f'bin\\N_m3u8DL-RE.exe --key {key} --save-name "{selected_name}" "{cdn_list}" --live-real-time-merge --live-pipe-mux --auto-select')
+    os.system(os.getcwd()+f'\\bin\\N_m3u8DL-RE.exe --key {key} --save-name "{selected_name}" "{cdn_list}" --live-real-time-merge --live-pipe-mux --auto-select')
     
     lang = int(input("Turkish Lang -> 1\nEnglish Lang -> 2\n-> "))
 
