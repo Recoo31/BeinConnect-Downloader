@@ -58,7 +58,7 @@ selected_name = data[selected]['titleOriginal']
 checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
 
 if checkentitlement['errCode']== "NEEDAUTH":
-    headers['cookie'] = req.get("https://reco31.vercel.app/loginbeinfilm").text
+    headers['cookie'] = req.get("https://reco31.vercel.app/logintodfilm").text
     checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
 else:
     pass
