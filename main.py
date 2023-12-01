@@ -15,7 +15,7 @@ headers = {
     'authority': 'mobileservice-smarttv-lg.beinconnect.com.tr',
     'accept': 'text/plain, */*; q=0.01',
     'accept-language': 'tr-TR,tr;q=0.8',
-    'cookie': 'TS01753cec=011d35fd7b7fc03df1fe60ad92072de05d6de5461a9cb1df75a8816a355a9a08fea0f2a00003651ae52a6ec2f9eaee24826534a2646ba66c4f77f2c41642060a997d39e33cef853f6c1b293f59bac6003296f1b837; TS01753cec030=01d23ba1732006902ae22246fc479b2745b27d5df33d25ac64436db81b9e1b560a6b1aeff5e3392cec6e2cf39562dee2604862fd7d; uc=init=%22H4sIAAAAAAAEAGWRX2%2bCMBTFvwvPkwgI6t5Qp5IJGFm2x%2bVSLrMJbU1L2b%2fsu6%2fdTI3x8Zzf7b3n3n57Kxwowazx7r0gjMJxMk0m2JI5tDPv7kwLYGh4WqwOZbZ63W%2fL4sHBp8%2bThfuj4OjMhQRuWypgSvM35%2beiwc74VT7azKPxowOlekapqOAGxn7gB46sqWTvIPHCw9DBLcjmGqojMH3Db0AOXLdAei1RXuXM1EGI3lgtdMouVBGJyCv6ZZskfmCHL086ranRH7PEydBokAyhpqNhCtYXnCPpTbDzkV6ydWb8UqWSHI2myd%2f7S%2fqJH%2flxHUf29suOIu8d47rrXOlC064pNKtt%2bn%2byQbETBOw0%2b5vxeBabZSXb4WBPbot%2bfgE4UqyP7wEAAA%3d%3d%22&uinf=k5%2fPtN0dS3rD62AQJtQDYgzBiTT1kNBO3mLxwgPFMo17NmghNN0c%2flI6MvX%2fCLRKdfA9moaNVIO6NB0Q8Ezh4iEDAYhPmJIu7a8Wy8cDU86oJqE%2bywU1z8pVgXABhxU85bxvQl2e1Guh300mIyePrD2M83dknUhA%2b8CbIGobU5R2r7sp3Yx1oOQhEaXxyExJG9VBFtiWQASOEWDpoVgoOCPYTrBfX1Ek%2fNs193AjXCA9hPvprc07FMyDy5g7kPsMjQMTA0s8FY5NkIL8dFeQbg%3d%3d; __RequestVerificationToken=VYp1XlulhmYxjH9KTe2kVcX31RvGV335JOWQzaBcu569sN5eCxtRsaugEa5dfj4JmlxR6dD2lmD6sQAeCC9VoO4XNIU1',
+    'Authorization': '%7b%22init%22%3a%22%2522H4sIAAAAAAAEAIVRy27CMBD8l5wb5MYhCb0FKigSD4lE3Df2RrXk2MiJqdqq%252f14jYUO4cJwZzc7O7m%252f0jmfBcM2jtyjLCSezNo%252bBz4oY0ryICUlonNEWAYCyaZJFL1fHDjp0nmpbHur6GOj6%252b%252bRoZaX0zNyA4mNqqznKMbXvj2h6oZWbGYYthem%252bwGCQ7h0fYPhT8SEXlG2BDdag8cq6P2g9eFQxg6gq8ROci5MtGzFGSYBaKWSDi7%252fvve9Lwz49uvWiEzohTZq%252buoILKVAND7tf4dwKyXe2a25brlBvNINL0uVVU1JQV8p0Gzz7S%252f79A0dpCyvMAQAA%2522%22%2c%22uinf%22%3a%22i0ZsKEo5nm6WSQ4qqz1NGAnaJ%252bqtN6gpQ0Lf6RVstI9%252b65TBdM1hCiqt3QwZjCR4ujivuAqEdRmV4E6cmzNq2wsEsYXipjuCf%252fJhBxYIlggKO1Uok%252blkhaq2ZtUc9bAeVkXFLrWTnH4yP34EPXsavoNDm0orU6eBObfA%252f2KYzUp1gTuAWVLnGibW7%252bSgoF44SXuyl5v1WGYbl%252b75Dx5Y6n%252fTnXMp2JEBatYkdeNJDZXgBo4RqefDg8Iic8WnSKrt%22%7d',
     'childroomactivated': 'false',
     'origin': 'https://smrtlg.beinconnect.com.tr',
     'referer': 'https://smrtlg.beinconnect.com.tr/',
@@ -55,11 +55,11 @@ if "PS" in selected_id:
 selected_name = data[selected]['titleOriginal']
 
 
-checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
+checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"StreamFormat":1,"IsPortrayal":"false"}).json()
 
 if checkentitlement['errCode']== "NEEDAUTH":
-    headers['cookie'] = req.get("https://reco31.vercel.app/logintodfilm").text
-    checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"IsPortrayal":"false"}).json()
+    headers['Authorization'] = req.get("https://reco31.vercel.app/logintodfilmtoken").text
+    checkentitlement = req.post("https://mobileservice-smarttv-lg.beinconnect.com.tr/api/checkentitlement", headers=headers, json={"CmsContentId":selected_id,"StreamFormat":1,"IsPortrayal":"false"}).json()
 else:
     pass
 
