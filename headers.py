@@ -1,5 +1,3 @@
-import requests
-
 headers = {
     'Accept': '*/*',
     'Accept-Language': 'tr-TR,tr;q=0.7',
@@ -17,7 +15,3 @@ headers = {
     'sec-ch-ua-platform': '"Windows"',
     'Content-Type': 'application/x-www-form-urlencoded',
 }
-
-data = '\b\x04'
-
-response = requests.post('https://digiturk-drm.ercdn.com/widevine/api/erproxy', headers=headers, data=data)
